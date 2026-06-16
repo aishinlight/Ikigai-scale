@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Ikigai-9 Scale — how deeply do you feel a sense of purpose?</title>
+<meta name="description" content="Take the Japanese Ikigai-9 scale and see your personal web of meaning. Free self-assessment.">
+<meta property="og:title" content="The Ikigai-9 Scale — how deeply do you feel a sense of purpose?">
+<meta property="og:description" content="9 statements. 2 minutes. Your personal ikigai web.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --sand: #F5F0E8;
+  --clay: #8B7355;
+  --clay-light: #A89279;
+  --clay-dark: #6B5740;
+  --ink: #3C3428;
+  --ink-soft: #6B6054;
+  --ash: #D6CFC3;
+  --paper: #FDFBF7;
+  --cedar: #C4A97D;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--sand);
+  color: var(--ink);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--ash);
+}
+
+.header-jp {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 300;
+  font-size: 13px;
+  color: var(--clay);
+  letter-spacing: 4px;
+  margin-bottom: 0.75rem;
+}
+
+.header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.header p {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.q-block {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(214,207,195,0.5);
+}
+.q-block:last-of-type { border-bottom: none; }
+
+.q-text {
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.5;
+  margin-bottom: 14px;
+  font-weight: 400;
+}
+
+.q-num {
+  display: inline-block;
+  width: 22px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--clay);
+}
+
+.scale-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.scale-wrap .end-label {
+  font-size: 11px;
+  color: var(--ink-soft);
+  min-width: 14px;
+  text-align: center;
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 3px;
+  background: var(--ash);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--clay);
+  border: 3px solid var(--paper);
+  box-shadow: 0 1px 4px rgba(60,52,40,0.2);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+input[type=range]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+input[type=range]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--clay);
+  border: 3px solid var(--paper);
+  box-shadow: 0 1px 4px rgba(60,52,40,0.2);
+  cursor: pointer;
+}
+
+.val-display {
+  min-width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--paper);
+  border: 1px solid var(--ash);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--clay-dark);
+}
+
+.scale-labels {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 26px;
+  margin-top: 4px;
+}
+.scale-labels span {
+  font-size: 10px;
+  color: var(--clay-light);
+}
+
+.name-block {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(214,207,195,0.5);
+}
+.name-block label {
+  display: block;
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+.name-block input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--ash);
+  border-radius: 8px;
+  background: var(--paper);
+  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.name-block input:focus {
+  border-color: var(--clay);
+}
+.name-block .hint {
+  font-size: 11px;
+  color: var(--clay-light);
+  margin-top: 5px;
+}
+
+.btn-submit {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: var(--clay);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  margin-top: 0.5rem;
+}
+.btn-submit:hover { background: var(--clay-dark); }
+.btn-submit:active { transform: scale(0.98); }
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-back {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px solid var(--ash);
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background 0.2s;
+}
+.btn-back:hover { background: rgba(214,207,195,0.3); }
+
+#result-section { display: none; }
+
+.result-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.result-header .jp-label {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 300;
+  font-size: 13px;
+  color: var(--clay);
+  letter-spacing: 3px;
+  margin-bottom: 0.5rem;
+}
+
+.result-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.result-header p {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+.score-card {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  margin: 1.5rem 0;
+}
+.score-card .number {
+  font-size: 48px;
+  font-weight: 600;
+  color: var(--clay);
+  line-height: 1;
+}
+.score-card .max {
+  font-size: 18px;
+  color: var(--clay-light);
+}
+
+.chart-wrap {
+  background: var(--paper);
+  border: 1px solid var(--ash);
+  border-radius: 14px;
+  padding: 1.5rem 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.interpretation {
+  background: var(--paper);
+  border: 1px solid var(--ash);
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+.interpretation h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--clay-dark);
+}
+.interpretation p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.footer-note {
+  text-align: center;
+  font-size: 11px;
+  color: var(--clay-light);
+  margin-top: 2rem;
+  line-height: 1.5;
+}
+
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div id="survey-section">
+    <div class="header">
+      <div class="header-jp">生きがい</div>
+      <h1>The Ikigai-9 Scale</h1>
+      <p>9 statements. 2 minutes.<br>Discover your personal web of meaning.</p>
+    </div>
+
+    <div class="name-block">
+      <label for="userName">Your name</label>
+      <input type="text" id="userName" placeholder="What should we call you?">
+      <div class="hint">Optional — you can take this anonymously</div>
+    </div>
+
+    <div id="questions"></div>
+
+    <button class="btn-submit" id="submitBtn" onclick="submitSurvey()">
+      See my ikigai web →
+    </button>
+  </div>
+
+  <div id="result-section">
+    <div class="result-header">
+      <div class="jp-label">あなたの生きがい</div>
+      <h2>Your ikigai web</h2>
+      <p>The wider the web, the more fully you experience a sense of meaning right now</p>
+    </div>
+
+    <div class="score-card">
+      <span class="number" id="scoreNum">—</span>
+      <span class="max">/ 45</span>
+    </div>
+
+    <div class="chart-wrap">
+      <canvas id="radarChart" role="img" aria-label="Radar chart of Ikigai-9 scores"></canvas>
+    </div>
+
+    <div class="interpretation" id="interp"></div>
+
+    <button class="btn-back" onclick="goBack()">← Change my answers</button>
+
+    <div class="footer-note">
+      The Ikigai-9 scale was developed by Tadamasa Imai and colleagues (2012).<br>
+      This is a self-reflection tool, not a clinical assessment.
+    </div>
+  </div>
+</div>
+
+<script>
+const GOOGLE_SCRIPT_URL = '';
+
+const questions = [
+  { id:'q1', text:'I believe that I have some impact on someone.' },
+  { id:'q2', text:'My life is mentally rich and fulfilled.' },
+  { id:'q3', text:'I am interested in many things.' },
+  { id:'q4', text:'I feel that I am contributing to someone or to society.' },
+  { id:'q5', text:'I would like to develop myself.' },
+  { id:'q6', text:'I often feel that I\'m happy.' },
+  { id:'q7', text:'I think that my existence is needed by something or someone.' },
+  { id:'q8', text:'I would like to learn something new or start something.' },
+  { id:'q9', text:'I have room in my mind.' }
+];
+
+const radarLabels = [
+  'Impact\non others',
+  'Richness\nof life',
+  'Broad\ninterest',
+  'Contribution\nto the world',
+  'Desire for\ngrowth',
+  'Feeling\nof happiness',
+  'Being\nneeded',
+  'Desire for\nnew things',
+  'Room\nin the mind'
+];
+
+const vals = {};
+questions.forEach(q => vals[q.id] = 3);
+
+const qContainer = document.getElementById('questions');
+questions.forEach((q, i) => {
+  const block = document.createElement('div');
+  block.className = 'q-block';
+  block.innerHTML = `
+    <div class="q-text"><span class="q-num">${i+1}.</span> ${q.text}</div>
+    <div class="scale-wrap">
+      <span class="end-label">1</span>
+      <input type="range" min="1" max="5" step="1" value="3" id="${q.id}"
+        oninput="vals['${q.id}']=+this.value;document.getElementById('v${q.id}').textContent=this.value">
+      <span class="end-label">5</span>
+      <div class="val-display" id="v${q.id}">3</div>
+    </div>
+    <div class="scale-labels">
+      <span>doesn't apply to me</span>
+      <span>applies a lot to me</span>
+    </div>
+  `;
+  qContainer.appendChild(block);
+});
+
+function getInterp(total) {
+  if (total <= 18) return {
+    title: '9–18 points — time to listen to yourself',
+    text: 'It seems difficult for you to feel a sense of meaning right now. This is normal during times of exhaustion or crisis. Mieko Kamiya wrote that ikigai is not something we find once and forever — it can fade and return. Pay attention to the axes where your scores are higher — that\'s where your anchor lies.'
+  };
+  if (total <= 27) return {
+    title: '19–27 points — a foundation exists, but there are gaps',
+    text: 'Your web has some strong threads — but some are thin. Look at your lowest scores: those are the dimensions worth nurturing. Often a small action is enough — signing up for a course, calling a friend, allowing yourself to dream.'
+  };
+  if (total <= 36) return {
+    title: '28–36 points — a sense of meaning is present',
+    text: 'Your web is fairly strong. You feel a sense of being needed, of interest, and of forward movement. Notice the axes where you could add more depth — they may become a source of fresh inspiration.'
+  };
+  return {
+    title: '37–45 points — a deep sense of ikigai',
+    text: 'Your web is wide and balanced — you are experiencing a fullness of meaning. As Ken Mogi says: ikigai doesn\'t require grand things — it lives in your morning coffee, in small joys, in daily presence. You already feel this.'
+  };
+}
+
+let chartInst = null;
+
+function submitSurvey() {
+  const btn = document.getElementById('submitBtn');
+  const data = questions.map(q => vals[q.id]);
+  const total = data.reduce((a, b) => a + b, 0);
+  const name = document.getElementById('userName').value.trim() || 'Anonymous';
+
+  if (GOOGLE_SCRIPT_URL) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Saving...';
+
+    const payload = {
+      name: name,
+      q1: data[0], q2: data[1], q3: data[2],
+      q4: data[3], q5: data[4], q6: data[5],
+      q7: data[6], q8: data[7], q9: data[8],
+      total: total,
+      date: new Date().toISOString()
+    };
+
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .catch(() => {})
+    .finally(() => {
+      btn.disabled = false;
+      btn.textContent = 'See my ikigai web →';
+      showResult(data, total);
+    });
+  } else {
+    showResult(data, total);
+  }
+}
+
+function showResult(data, total) {
+  document.getElementById('scoreNum').textContent = total;
+  document.getElementById('survey-section').style.display = 'none';
+  document.getElementById('result-section').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  const interp = getInterp(total);
+  document.getElementById('interp').innerHTML =
+    `<h3>${interp.title}</h3><p>${interp.text}</p>`;
+
+  if (chartInst) chartInst.destroy();
+
+  chartInst = new Chart(document.getElementById('radarChart'), {
+    type: 'radar',
+    data: {
+      labels: radarLabels,
+      datasets: [{
+        label: 'Ikigai',
+        data: data,
+        fill: true,
+        backgroundColor: 'rgba(139,115,85,0.18)',
+        borderColor: '#8B7355',
+        pointBackgroundColor: '#8B7355',
+        pointBorderColor: '#FDFBF7',
+        pointRadius: 5,
+        pointBorderWidth: 2,
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        r: {
+          min: 0, max: 5,
+          ticks: { stepSize: 1, display: false },
+          grid: { color: 'rgba(139,115,85,0.15)' },
+          pointLabels: {
+            font: { size: 11, family: 'Inter' },
+            color: '#6B6054'
+          },
+          angleLines: { color: 'rgba(139,115,85,0.12)' }
+        }
+      }
+    }
+  });
+}
+
+function goBack() {
+  document.getElementById('result-section').style.display = 'none';
+  document.getElementById('survey-section').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>

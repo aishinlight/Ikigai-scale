@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Шкала Ікіґай-9 — наскільки ви відчуваєте сенс?</title>
+<meta name="description" content="Пройдіть японську шкалу Ikigai-9 і побачте свою павутину відчуття сенсу. Безкоштовний тест.">
+<meta property="og:title" content="Шкала Ікіґай-9 — наскільки ви відчуваєте сенс?">
+<meta property="og:description" content="9 тверджень. 2 хвилини. Ваша особиста павутина ікіґай.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --sand: #F5F0E8;
+  --clay: #8B7355;
+  --clay-light: #A89279;
+  --clay-dark: #6B5740;
+  --ink: #3C3428;
+  --ink-soft: #6B6054;
+  --ash: #D6CFC3;
+  --paper: #FDFBF7;
+  --cedar: #C4A97D;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--sand);
+  color: var(--ink);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+/* --- Header --- */
+.header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--ash);
+}
+
+.header-jp {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 300;
+  font-size: 13px;
+  color: var(--clay);
+  letter-spacing: 4px;
+  margin-bottom: 0.75rem;
+}
+
+.header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.header p {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+/* --- Questions --- */
+.q-block {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(214,207,195,0.5);
+}
+.q-block:last-of-type { border-bottom: none; }
+
+.q-text {
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.5;
+  margin-bottom: 14px;
+  font-weight: 400;
+}
+
+.q-num {
+  display: inline-block;
+  width: 22px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--clay);
+}
+
+.scale-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.scale-wrap .end-label {
+  font-size: 11px;
+  color: var(--ink-soft);
+  min-width: 14px;
+  text-align: center;
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 3px;
+  background: var(--ash);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--clay);
+  border: 3px solid var(--paper);
+  box-shadow: 0 1px 4px rgba(60,52,40,0.2);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+input[type=range]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+input[type=range]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--clay);
+  border: 3px solid var(--paper);
+  box-shadow: 0 1px 4px rgba(60,52,40,0.2);
+  cursor: pointer;
+}
+
+.val-display {
+  min-width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--paper);
+  border: 1px solid var(--ash);
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--clay-dark);
+}
+
+.scale-labels {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 26px;
+  margin-top: 4px;
+}
+.scale-labels span {
+  font-size: 10px;
+  color: var(--clay-light);
+}
+
+/* --- Name field --- */
+.name-block {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(214,207,195,0.5);
+}
+.name-block label {
+  display: block;
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+.name-block input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--ash);
+  border-radius: 8px;
+  background: var(--paper);
+  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.name-block input:focus {
+  border-color: var(--clay);
+}
+.name-block .hint {
+  font-size: 11px;
+  color: var(--clay-light);
+  margin-top: 5px;
+}
+
+/* --- Button --- */
+.btn-submit {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: var(--clay);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  margin-top: 0.5rem;
+}
+.btn-submit:hover { background: var(--clay-dark); }
+.btn-submit:active { transform: scale(0.98); }
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-back {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px solid var(--ash);
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background 0.2s;
+}
+.btn-back:hover { background: rgba(214,207,195,0.3); }
+
+/* --- Result --- */
+#result-section { display: none; }
+
+.result-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.result-header .jp-label {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 300;
+  font-size: 13px;
+  color: var(--clay);
+  letter-spacing: 3px;
+  margin-bottom: 0.5rem;
+}
+
+.result-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.result-header p {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+.score-card {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  margin: 1.5rem 0;
+}
+.score-card .number {
+  font-size: 48px;
+  font-weight: 600;
+  color: var(--clay);
+  line-height: 1;
+}
+.score-card .max {
+  font-size: 18px;
+  color: var(--clay-light);
+}
+
+.chart-wrap {
+  background: var(--paper);
+  border: 1px solid var(--ash);
+  border-radius: 14px;
+  padding: 1.5rem 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.interpretation {
+  background: var(--paper);
+  border: 1px solid var(--ash);
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+.interpretation h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--clay-dark);
+}
+.interpretation p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.footer-note {
+  text-align: center;
+  font-size: 11px;
+  color: var(--clay-light);
+  margin-top: 2rem;
+  line-height: 1.5;
+}
+
+/* --- Loading --- */
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <!-- === SURVEY === -->
+  <div id="survey-section">
+    <div class="header">
+      <div class="header-jp">生きがい</div>
+      <h1>Шкала Ікіґай-9</h1>
+      <p>9 тверджень. 2 хвилини.<br>Побачте свою павутину відчуття сенсу.</p>
+    </div>
+
+    <div class="name-block">
+      <label for="userName">Ваше ім'я</label>
+      <input type="text" id="userName" placeholder="Як до вас звертатися?">
+      <div class="hint">Необов'язково — можна пройти анонімно</div>
+    </div>
+
+    <div id="questions"></div>
+
+    <button class="btn-submit" id="submitBtn" onclick="submitSurvey()">
+      Побачити мою павутину →
+    </button>
+  </div>
+
+  <!-- === RESULT === -->
+  <div id="result-section">
+    <div class="result-header">
+      <div class="jp-label">あなたの生きがい</div>
+      <h2>Ваша павутина ікіґай</h2>
+      <p>Чим ширша павутина — тим повніше ваше відчуття сенсу прямо зараз</p>
+    </div>
+
+    <div class="score-card">
+      <span class="number" id="scoreNum">—</span>
+      <span class="max">/ 45</span>
+    </div>
+
+    <div class="chart-wrap">
+      <canvas id="radarChart" role="img" aria-label="Радарна діаграма результатів Ікіґай-9"></canvas>
+    </div>
+
+    <div class="interpretation" id="interp"></div>
+
+    <button class="btn-back" onclick="goBack()">← Змінити відповіді</button>
+
+    <div class="footer-note">
+      Шкала Ikigai-9 розроблена Тадамасою Ічі та колегами (2012).<br>
+      Це інструмент самопізнання, не діагностика.
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================
+//  НАЛАШТУВАННЯ
+// ============================
+
+// 🔧 ВСТАВТЕ СЮДИ URL ВАШОГО GOOGLE APPS SCRIPT:
+const GOOGLE_SCRIPT_URL = '';
+// Приклад: 'https://script.google.com/macros/s/AKfyc.../exec'
+
+// ============================
+
+const questions = [
+  { id:'q1', text:'Я вірю, що маю певний вплив на когось.' },
+  { id:'q2', text:'Моє життя духовно багате та наповнене.' },
+  { id:'q3', text:'Мені цікаво багато речей.' },
+  { id:'q4', text:'Я відчуваю, що роблю внесок для когось або для суспільства.' },
+  { id:'q5', text:'Я хочу розвиватися.' },
+  { id:'q6', text:'Я часто відчуваю себе щасливою / щасливим.' },
+  { id:'q7', text:'Я думаю, що моє існування потрібне — комусь або чомусь.' },
+  { id:'q8', text:'Я хочу навчитися чогось нового або розпочати щось.' },
+  { id:'q9', text:'У мене є простір у думках — для роздумів, мрій, ідей.' }
+];
+
+const radarLabels = [
+  'Вплив на інших',
+  'Наповненість\nжиття',
+  'Різнобічний\nінтерес',
+  'Внесок\nу світ',
+  'Бажання\nрозвитку',
+  'Відчуття\nщастя',
+  'Потрібність',
+  'Прагнення\nнового',
+  'Простір\nу думках'
+];
+
+const vals = {};
+questions.forEach(q => vals[q.id] = 3);
+
+// Build question UI
+const qContainer = document.getElementById('questions');
+questions.forEach((q, i) => {
+  const block = document.createElement('div');
+  block.className = 'q-block';
+  block.innerHTML = `
+    <div class="q-text"><span class="q-num">${i+1}.</span> ${q.text}</div>
+    <div class="scale-wrap">
+      <span class="end-label">1</span>
+      <input type="range" min="1" max="5" step="1" value="3" id="${q.id}"
+        oninput="vals['${q.id}']=+this.value;document.getElementById('v${q.id}').textContent=this.value">
+      <span class="end-label">5</span>
+      <div class="val-display" id="v${q.id}">3</div>
+    </div>
+    <div class="scale-labels">
+      <span>зовсім не про мене</span>
+      <span>цілком про мене</span>
+    </div>
+  `;
+  qContainer.appendChild(block);
+});
+
+// Interpretations
+function getInterp(total) {
+  if (total <= 18) return {
+    title: '9–18 балів — час прислухатися до себе',
+    text: 'Схоже, зараз вам складно відчувати сенс. Це нормально в часи виснаження чи кризи. Камія Мієко писала, що ікіґай — це не те, що ми знаходимо назавжди. Воно може зникати й повертатися. Зверніть увагу на ті осі, де оцінка вища — там і шукайте опору.'
+  };
+  if (total <= 27) return {
+    title: '19–27 балів — є основа, але є й прогалини',
+    text: 'У вашій павутині є сильні сторони — але деякі нитки тоненькі. Подивіться, де найменші значення: саме ці виміри варто підживити. Часто достатньо маленької дії — записатися на курс, подзвонити другові, дозволити собі помріяти.'
+  };
+  if (total <= 36) return {
+    title: '28–36 балів — відчуття сенсу присутнє',
+    text: 'Ваша павутина досить міцна. Ви відчуваєте і потрібність, і інтерес, і рух уперед. Зверніть увагу на ті осі, де можна додати глибини — саме вони можуть стати джерелом нового натхнення.'
+  };
+  return {
+    title: '37–45 балів — глибоке відчуття ікіґай',
+    text: 'Ваша павутина широка й рівномірна — ви переживаєте повноту сенсу. Як казав Кен Моґі: ікіґай не потребує грандіозних речей — воно у ранковій каві, у дрібних радощах, у щоденній присутності. Ви це вже відчуваєте.'
+  };
+}
+
+let chartInst = null;
+
+function submitSurvey() {
+  const btn = document.getElementById('submitBtn');
+  const data = questions.map(q => vals[q.id]);
+  const total = data.reduce((a, b) => a + b, 0);
+  const name = document.getElementById('userName').value.trim() || 'Анонімно';
+
+  // Send to Google Sheets if configured
+  if (GOOGLE_SCRIPT_URL) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Зберігаю...';
+
+    const payload = {
+      name: name,
+      q1: data[0], q2: data[1], q3: data[2],
+      q4: data[3], q5: data[4], q6: data[5],
+      q7: data[6], q8: data[7], q9: data[8],
+      total: total,
+      date: new Date().toISOString()
+    };
+
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .catch(() => {})
+    .finally(() => {
+      btn.disabled = false;
+      btn.textContent = 'Побачити мою павутину →';
+      showResult(data, total);
+    });
+  } else {
+    showResult(data, total);
+  }
+}
+
+function showResult(data, total) {
+  document.getElementById('scoreNum').textContent = total;
+  document.getElementById('survey-section').style.display = 'none';
+  document.getElementById('result-section').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  const interp = getInterp(total);
+  document.getElementById('interp').innerHTML =
+    `<h3>${interp.title}</h3><p>${interp.text}</p>`;
+
+  if (chartInst) chartInst.destroy();
+
+  chartInst = new Chart(document.getElementById('radarChart'), {
+    type: 'radar',
+    data: {
+      labels: radarLabels,
+      datasets: [{
+        label: 'Ікіґай',
+        data: data,
+        fill: true,
+        backgroundColor: 'rgba(139,115,85,0.18)',
+        borderColor: '#8B7355',
+        pointBackgroundColor: '#8B7355',
+        pointBorderColor: '#FDFBF7',
+        pointRadius: 5,
+        pointBorderWidth: 2,
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        r: {
+          min: 0, max: 5,
+          ticks: { stepSize: 1, display: false },
+          grid: { color: 'rgba(139,115,85,0.15)' },
+          pointLabels: {
+            font: { size: 11, family: 'Inter' },
+            color: '#6B6054'
+          },
+          angleLines: { color: 'rgba(139,115,85,0.12)' }
+        }
+      }
+    }
+  });
+}
+
+function goBack() {
+  document.getElementById('result-section').style.display = 'none';
+  document.getElementById('survey-section').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
